@@ -1,0 +1,25 @@
+# Decisions
+
+One dated line per decision, oldest first. Append new ones at the bottom as `- YYYY-MM-DD · Topic: decision (source)`. The reasoning lives in [`plan.md`](plan.md). A later line overrides an earlier one on the same topic.
+
+- 2026-10-29 · Primary user: solo devs and indie hackers building with agents. (Oct 29 draft; kept in rev 2)
+- 2026-10-29 · Goal: OSS + building in public, not revenue; licence MIT. (Oct 29 draft; kept in rev 2)
+- 2026-11-03 · Name: keep **Squadra**; accept the known collisions `github.com/dagoSte/squadra` and `usesquadra.com`. (plan rev 2, Decisions)
+- 2026-11-03 · Headline: "settings, extracted": *your app's style as 8 settings, read from your code, enforced on your agent.* (plan rev 2, Decisions)
+- 2026-11-03 · Scope: guardrail + settings model first; studio/generator, components and Figma/Paper later, not blocked by v0.1 choices. (plan rev 2, Decisions)
+- 2026-11-03 · Platform: web, Tailwind v4 (+ shadcn conventions) only in v0.1; React Native/Expo only after web shows repeat users. (plan rev 2, Decisions)
+- 2026-11-03 · Style model: 8 main settings with named steps + effects; presets ("styles") are starting points; settings are stored explicitly. (plan rev 2, Decisions)
+- 2026-11-03 · Enforcement: tiered. Tier 1 blocks at Stop (max 2 rounds), Tier 2 warns after each edit, Tier 3 lives in DESIGN.md only; per-rule `error / warn / off`. (plan rev 2, Decisions)
+- 2026-11-03 · Agents: Claude Code first-class (hooks + skill); Codex and others get AGENTS.md + pre-commit + a GitHub Action. (plan rev 2, Decisions)
+- 2026-11-03 · Engine: an ESLint plugin used internally by `squadra check`, with Tailwind v4 design-system resolution. (plan rev 2, Decisions)
+- 2026-11-03 · `@shadcn/lint`: what gets reused is decided by the M0 spike; its `no-restyle` stays off by default. (founder review of rev 2, #4)
+- 2026-11-03 · Packaging: one npm package, `squadra`, with subpath exports (`squadra/eslint`). (plan rev 2, Decisions)
+- 2026-11-03 · Hosting: code on the personal GitHub account (`piotr-g9k/squadra`); npm unscoped `squadra` (owned) is the only published package; the `usesquadra` npm org is held in reserve; docs at squadra.g9k.it. Revisit an org only if contributors arrive. (founder review of rev 2, #5)
+- 2026-11-03 · Pace: ~5 h/week, heavily agent-assisted (T3 Code + Claude Code); milestones with optimistic target dates and explicit re-cut triggers. (plan rev 2, Decisions)
+- 2026-11-03 · Milestones: M0 Nov 15, M1 alpha Dec 6, checkpoint Dec 20, M2 mid-Jan 2027, v0.1 launch mid-Feb 2027. If a milestone slips by more than 1 week, cut its scope rather than move the date. (plan rev 2, Milestones)
+- 2026-11-03 · Dogfood app: a new web app inside Piotr's existing monorepo, on the Pebble preset, started in November. As a result, M0 adds monorepo support. (founder review of rev 2, #1)
+- 2026-11-03 · Presets: Paper / Pebble / Studio / Ledger / Poster; Classic is replaced by the dark-first Studio. (founder review of rev 2, #2)
+- 2026-11-03 · Motion: under `minimal`, floating enter/exit animations are allowed (Paper keeps minimal). (founder review of rev 2, #3)
+- 2026-11-03 · Launch visuals: a static preset image grid, not an interactive gallery; the gallery/playground follows with the studio. (founder review of rev 2, #6)
+- 2026-11-03 · Repo: created at github.com/piotr-g9k/squadra (public, MIT). The plan and build guide moved into `docs/`, which replaces the scratch planning thread as the source of truth. The reviews and the Oct 29 draft stay out of the repo; their conclusions are in the plan. (repo setup)
+- 2026-11-03 · Kill criteria: published in the README roadmap. This resolves the plan's "still open" question. (repo setup)
