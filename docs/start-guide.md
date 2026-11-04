@@ -4,7 +4,7 @@ Nov 3, 2026 · companion to [`plan.md`](plan.md), which says what to build and w
 
 | When | Step | Time | Output |
 | --- | --- | --- | --- |
-| This week | 1. Start the dogfood app with a **hand-written** DESIGN.md | ~2–3 h (app time) | DESIGN.md + Pebble `globals.css` in the app |
+| This week | 1. Start the dogfood app with a **hand-written** DESIGN.md | ~2–3 h (app time) | DESIGN.md + Pebble CSS in the app |
 | Nov 5–15 | 2. Build M0 in 5 sessions | ~10 h | `squadra check` running on the dogfood app |
 | Nov 16 – Dec 6 | 3. Turn the Claude hook on in the dogfood app; ship the alpha | ~15 h | `squadra@0.0.x`, GIF |
 | Dec 20 | 4. Checkpoint | 1 h | Published numbers, go/pivot |
@@ -34,11 +34,11 @@ squadra/
 
 ## Step 1: the dogfood app (this week, in its own project)
 
-The app is a new Next.js + Tailwind v4 + shadcn app in Piotr's existing **private** monorepo, on Pebble. It's set up from its own prompt in a separate project. Squadra doesn't exist yet when the app starts, and that's fine. The hand-written DESIGN.md tests the format on a real app before any code exists.
+The app is PostDAR's new `apps/web` (TanStack Start + Convex + Tailwind v4 + shadcn `new-york`) in Piotr's existing **private** `postdar` monorepo, on Pebble. It's set up from its own prompt in a separate project. Squadra doesn't exist yet when the app starts, and that's fine. The hand-written DESIGN.md tests the format on a real app before any code exists.
 
 The app repo is private, so nothing here links to it. Three things are **copied** into this repo, and copying makes them public:
 - its DESIGN.md, which becomes the first schema fixture (S1);
-- its `globals.css`, which becomes `packages/squadra/presets/pebble.css` (S5);
+- its Pebble foundation CSS (`src/styles.css`, kept apart from the PostDAR-specific `src/brand.css`), which becomes `packages/squadra/presets/pebble.css` (S5);
 - lines in [`dogfood-log.md`](dogfood-log.md).
 
 ## Step 2: build M0 (Nov 5–15, ~10 h, 5 sessions)
