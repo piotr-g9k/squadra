@@ -107,3 +107,80 @@ describe('x-squadra fields', () => {
     ]);
   });
 });
+
+describe('review regressions', () => {
+  it('reports an unresolved YAML alias instead of throwing', () => {
+    expect(squadraFindings(withLine('name: Minimal', 'name: *missing'))).toMatchObject([
+      { severity: 'error', message: expect.stringContaining('YAML error') },
+    ]);
+  });
+
+  it('reports an alias bomb instead of expanding it', () => {
+    const bomb = [
+      'a: &a [x, x, x, x, x, x, x, x, x, x]',
+      'b: &b [*a, *a, *a, *a, *a, *a, *a, *a, *a, *a]',
+      'c: &c [*b, *b, *b, *b, *b, *b, *b, *b, *b, *b]',
+      'd: [*c, *c, *c, *c, *c, *c, *c, *c, *c, *c]',
+    ].join('\n');
+    expect(squadraFindings(withLine('name: Minimal', `name: Minimal\n${bomb}`))).toMatchObject([
+      { severity: 'error', message: expect.stringContaining('YAML error') },
+    ]);
+  });
+
+  it.each(['toString', 'constructor', '__proto__'])('dark key "%s" is not a light key', (key) => {
+    expect(squadraFindings(withLine('        primary: "#3B82F6"', `        primary: "#3B82F6"\n        ${key}: "#3B82F6"`))).toMatchObject([
+      { severity: 'error', path: `x-squadra.modes.dark.colors.${key}` },
+    ]);
+  });
+
+  it.each(['bananas', 'rgb(bananas)', 'oklch(0.5 0.1)', 'rgb(0 0 0 0)', 'oklch(0.5, 0.1, 200 / 0.5)', 'rgb(0 0 0 / 1 / 2)'])(
+    'rejects the dark color %s',
+    (color) => {
+      expect(squadraFindings(withLine('        primary: "#3B82F6"', `        primary: "${color}"`))).toMatchObject([
+        { severity: 'error', path: 'x-squadra.modes.dark.colors.primary' },
+      ]);
+    },
+  );
+
+  it.each([
+    'oklch(0.9221 0.0322 254 / 0.15)',
+    'oklch(0.34 0.088 256)',
+    'rgb(0 0 0)',
+    'rgba(0, 0, 0, 0.5)',
+    'hsl(240deg 5% 96%)',
+    'oklch(none 0 0)',
+    'color-mix(in oklch, #0D2D55 40%, transparent)',
+    'navy',
+    'currentColor',
+  ])('accepts the dark color %s', (color) => {
+    expect(squadraFindings(withLine('        primary: "#3B82F6"', `        primary: "${color}"`))).toEqual([]);
+  });
+
+  it('accepts a color function split over lines', () => {
+    expect(squadraFindings(withLine('        primary: "#3B82F6"', '        primary: |-\n          rgb(0\n          0 0)'))).toEqual([]);
+  });
+
+  it.each(['/abs/styles.css', 'C:\\app\\styles.css', '\\\\server\\share\\styles.css', 'https://example.com/styles.css'])(
+    'rejects the non-relative css path %s',
+    (css) => {
+      expect(squadraFindings(withLine('  fonts: [Inter]', `  fonts: [Inter]\n  css: '${css}'`))).toMatchObject([
+        { severity: 'error', path: 'x-squadra.css' },
+      ]);
+    },
+  );
+
+  it.each(['src/styles.css', '../shared/styles.css', './app/globals.css'])('accepts the css path %s', (css) => {
+    expect(squadraFindings(withLine('  fonts: [Inter]', `  fonts: [Inter]\n  css: ${css}`))).toEqual([]);
+  });
+
+  it('accepts a narrower glob over a known rule family', () => {
+    const rules = '  rules:\n    motion/no-*: warn\n    tokens/no-*: off\n';
+    expect(squadraFindings(withLine('  modes:\n', `${rules}  modes:\n`))).toEqual([]);
+  });
+
+  it('locates design.md findings on keys that contain dots', () => {
+    const content = withLine('  primary: "#2563EB"', '  primary: "#2563EB"\n  primary.bad: "not-a-color"');
+    const f = validateDesignMd(content).findings.find((x) => x.source === 'design.md' && x.severity === 'error');
+    expect(f).toMatchObject({ path: 'colors.primary.bad', line: 8, col: 16 });
+  });
+});

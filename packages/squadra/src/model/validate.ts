@@ -78,7 +78,7 @@ export function validateDesignMd(content: string): ValidationResult {
     findings.push({
       severity: f.severity,
       source: 'design.md',
-      ...(f.path ? { path: f.path, ...fm.locate(f.path.split('.')) } : {}),
+      ...(f.path ? { path: f.path, ...fm.locateDotted(f.path) } : {}),
       message: f.message,
       ...(f.rule ? { rule: f.rule } : {}),
     });
@@ -100,7 +100,7 @@ function checkDarkKeys(xs: Record<string, unknown>, light: Record<string, unknow
   if (!isRecord(dark.colors)) return;
   const lightNames = Object.keys(light);
   for (const key of Object.keys(dark.colors)) {
-    if (key in light) continue;
+    if (Object.hasOwn(light, key)) continue;
     add(
       'error',
       ['x-squadra', 'modes', 'dark', 'colors', key],
@@ -116,13 +116,24 @@ const globToRegExp = (glob: string) =>
 const EXACT_RULES = KNOWN_RULES.filter((r) => !r.includes('*'));
 const FAMILIES = KNOWN_RULES.filter((r) => r.includes('*'));
 
-/** A rule key is known if it is a plan rule ID, a member of a plan family, or a glob over plan IDs. */
+/** The literal text before the first `*`. */
+const globPrefix = (glob: string) => glob.split('*')[0]!;
+
+/**
+ * A rule key is known if it is a plan rule ID, a member of a plan family (`motion/*`), or a glob
+ * that matches a plan ID or overlaps a plan family. Rule globs only ever end in `*`, so two
+ * globs overlap when one prefix starts with the other.
+ */
 function isKnownRule(key: string): boolean {
   if ((KNOWN_RULES as readonly string[]).includes(key)) return true;
   if (FAMILIES.some((f) => globToRegExp(f).test(key))) return true;
   if (key.includes('*')) {
     const re = globToRegExp(key);
-    return EXACT_RULES.some((r) => re.test(r)) || FAMILIES.some((f) => re.test(f));
+    const prefix = globPrefix(key);
+    return (
+      EXACT_RULES.some((r) => re.test(r)) ||
+      FAMILIES.some((f) => globPrefix(f).startsWith(prefix) || prefix.startsWith(globPrefix(f)))
+    );
   }
   return false;
 }

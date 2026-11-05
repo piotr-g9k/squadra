@@ -11,6 +11,11 @@ export interface FrontMatter {
   doc: Document.Parsed;
   /** Maps a YAML path to a 1-based file position. */
   locate: (path: readonly PropertyKey[], target?: 'auto' | 'key' | 'value') => Location | undefined;
+  /**
+   * Locates a dotted path from another tool (design.md's `colors.primary`). Keys may contain
+   * dots themselves, so each level matches the longest real key that fits.
+   */
+  locateDotted: (path: string) => Location | undefined;
 }
 
 export type FrontMatterResult =
@@ -80,5 +85,36 @@ export function parseFrontMatter(content: string): FrontMatterResult {
     return range ? toLocation(range[0]) : path.length === 0 ? { line: 1, col: 1 } : undefined;
   };
 
-  return { ok: true, frontMatter: { data: doc.toJS(), doc, locate } };
+  const locateDotted: FrontMatter['locateDotted'] = (dotted) => {
+    const segs: string[] = [];
+    let node: unknown = doc.contents;
+    let rest = dotted;
+    while (rest) {
+      if (!isMap(node)) return undefined;
+      const keys = node.items
+        .map((p) => String(isScalar(p.key) ? p.key.value : p.key))
+        .filter((k) => rest === k || rest.startsWith(`${k}.`))
+        .sort((a, b) => b.length - a.length);
+      const key = keys[0];
+      if (key === undefined) return undefined;
+      segs.push(key);
+      node = node.get(key, true);
+      rest = rest.slice(key.length + 1);
+    }
+    return locate(segs);
+  };
+
+  let data: unknown;
+  try {
+    // toJS resolves aliases; an unresolved alias or an alias bomb throws here.
+    data = doc.toJS({ maxAliasCount: 100 });
+  } catch (err) {
+    return {
+      ok: false,
+      message: `YAML error: ${err instanceof Error ? err.message.split('\n')[0] : String(err)}`,
+      location: { line: 1, col: 1 },
+    };
+  }
+
+  return { ok: true, frontMatter: { data, doc, locate, locateDotted } };
 }

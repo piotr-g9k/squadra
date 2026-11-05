@@ -1,15 +1,13 @@
 import { z } from 'zod';
 import { BLUR_STEPS, PRESETS, SETTINGS, SEVERITIES, ZONE_SETTINGS } from './settings.js';
+import { isCssColor } from './css-color.js';
 import { didYouMean, listOr } from './text.js';
 
-const HEX = /^#(?:[0-9a-f]{3,4}|[0-9a-f]{6}|[0-9a-f]{8})$/i;
-const COLOR_FN = /^(?:rgba?|hsla?|hwb|lab|lch|oklab|oklch|color|color-mix)\(.+\)$/i;
-const NAMED = /^[a-z]+$/i;
+export { isCssColor };
 
-/** A loose CSS color check for values design.md doesn't see (dark mode lives in x-squadra). */
-export function isCssColor(value: string): boolean {
-  const v = value.trim();
-  return HEX.test(v) || COLOR_FN.test(v) || NAMED.test(v);
+/** A relative file path: not POSIX/Windows absolute, not UNC, not a URL (checked independent of the host OS). */
+function isRelativePath(p: string): boolean {
+  return !/^[/\\]/.test(p) && !/^[a-z][a-z0-9+.-]*:/i.test(p);
 }
 
 const cssColor = z.string().refine(isCssColor, {
@@ -78,9 +76,7 @@ export const xSquadraSchema = z.strictObject({
   css: z
     .string()
     .min(1)
-    .refine((p) => !p.startsWith('/') && !/^[a-z]:[\\/]/i.test(p), {
-      error: 'css must be a path relative to DESIGN.md.',
-    })
+    .refine(isRelativePath, { error: 'css must be a path relative to DESIGN.md, e.g. src/styles.css.' })
     .optional(),
   vendored: globs.optional(),
   modes: z
