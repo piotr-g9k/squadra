@@ -136,3 +136,11 @@ describe('bad fixtures fail with one located error', () => {
     expect(errorsOf(result.findings)).toEqual([expected]);
   });
 });
+
+describe('design.md adapter', () => {
+  it('reports the exact version pinned in package.json', async () => {
+    const { DESIGN_MD_VERSION } = await import('../src/model/designmd.js');
+    const pkg = (await import('../package.json', { with: { type: 'json' } })).default;
+    expect(pkg.dependencies['@google/design.md']).toBe(DESIGN_MD_VERSION);
+  });
+});

@@ -107,7 +107,7 @@ colors:                      # spec field: light/default values
   primary: "#2563eb"
   muted: "#f4f4f5"
   border: "#e4e4e7"
-  chart-1: "#2563eb"         # chart-* and label-* roles are first-class
+  chart-1: "#2563eb"         # chart-* and label-* are Squadra roles; to design.md they are ordinary color names
 rounded: { sm: 4px, md: 6px, lg: 8px }
 # spacing, typography: spec fields, copied from the app's CSS or the preset
 
