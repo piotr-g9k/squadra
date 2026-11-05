@@ -53,6 +53,12 @@ Run one T3 thread per session. Start each one with: read the plan and decisions,
 | S4 | Spike: `@shadcn/lint` + our 3 rules on shadcn `apps/v4` and 2 OSS Tailwind v4 apps; hand-check 50 hits | Reuse-vs-own decision recorded in `docs/decisions.md`; false positives < 5% |
 | S5 | `init --style pebble` (preset CSS, DESIGN.md, `squadra` skill, CLAUDE.md pointer) | Re-running `init` on a scratch copy of the dogfood app reproduces what you hand-wrote (modulo colors) |
 
+**Inputs from the dogfood app** (PostDAR's report, Nov 5):
+- **S1:** the fixture is PostDAR's `apps/web/DESIGN.md`. It uses `oklch()` strings with alpha, the extra spec keys `description`, `typography`, `spacing` and `components`, and 28 dark keys in `x-squadra.modes.dark`. design.md lint gives 0 errors and 12 warnings: tokens used only in CSS show as orphaned, large-text contrast is a false positive, and `x-squadra` itself is flagged as `token-like-ignored`.
+- **S2:** the shadcn `new-york` registry now imports `cn` from the npm package `cn`, not `clsx` + `tailwind-merge`. The collector must recognize it.
+- **S3:** the app's CSS resets Tailwind's default palette, shadow and blur scales, so `bg-blue-500` or `shadow-md` silently generate nothing. Rules must flag classes that resolve to nothing, not skip them.
+- **S5:** the Pebble preset should ship that closed-scale reset. `shadcn init` no longer offers `new-york`, so `components.json` had to be written by hand.
+
 **S1 prompt** (paste as-is):
 
 > Read docs/plan.md and docs/decisions.md. Scaffold the repo for M0 exactly as in the plan's Architecture section: pnpm workspace, one package `packages/squadra` (TypeScript, Node 20+, tsdown, vitest), a `squadra` bin that prints its version, CI running typecheck + tests on PRs, and a tag-triggered publish workflow using npm trusted publishing. No rules yet. Use plan mode first.
