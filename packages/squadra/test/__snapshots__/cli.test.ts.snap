@@ -1,0 +1,6 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`squadra validate > passes the PostDAR fixture with warnings (exit 0) 1`] = `
+"squadra 0.0.0
+"
+`;
