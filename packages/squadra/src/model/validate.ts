@@ -237,7 +237,10 @@ function explainIssues(issues: readonly z.core.$ZodIssue[]): Explained[] {
           if (isSettingsPath(path) && path[1] === 'zones' && (SETTING_NAMES as string[]).includes(key)) {
             out.push({
               path: keyPath,
-              message: `zones can only change ${listAnd(ZONE_SETTINGS)}; ${key} is guidance only.`,
+              message:
+                key === 'type'
+                  ? `zones can only change ${listAnd(ZONE_SETTINGS)}; type is global, because its rules read x-squadra.fonts.`
+                  : `zones can only change ${listAnd(ZONE_SETTINGS)}; ${key} is guidance only.`,
               target: 'key',
             });
             continue;

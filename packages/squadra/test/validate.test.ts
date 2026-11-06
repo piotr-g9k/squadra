@@ -114,7 +114,7 @@ describe('bad fixtures fail with one located error', () => {
         path: 'x-squadra.zones[0].settings.shape',
         line: 24,
         col: 19,
-        message: 'zones can only change fill, edges, shadow, type and motion; shape is guidance only.',
+        message: 'zones can only change fill, edges, shadow and motion; shape is guidance only.',
       },
     ],
     [

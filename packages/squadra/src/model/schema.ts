@@ -47,7 +47,6 @@ const zoneSettings = z.strictObject({
   fill: settingsShape.fill.optional(),
   edges: settingsShape.edges.optional(),
   shadow: settingsShape.shadow.optional(),
-  type: settingsShape.type.optional(),
   motion: settingsShape.motion.optional(),
 } satisfies Record<(typeof ZONE_SETTINGS)[number], unknown>);
 

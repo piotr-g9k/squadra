@@ -19,7 +19,7 @@ export type Settings = { [S in SettingName]: SettingStep<S> };
 export const SETTING_NAMES = Object.keys(SETTINGS) as SettingName[];
 
 /** Settings that switch rules on. Zones may change only these (plus effects and severities). */
-export const ZONE_SETTINGS = ['fill', 'edges', 'shadow', 'type', 'motion'] as const satisfies readonly SettingName[];
+export const ZONE_SETTINGS = ['fill', 'edges', 'shadow', 'motion'] as const satisfies readonly SettingName[];
 
 export const BLUR_STEPS = ['none', 'overlays', 'anywhere'] as const;
 export const EFFECT_NAMES = ['gradients', 'glow', 'blur'] as const;

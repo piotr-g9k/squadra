@@ -100,6 +100,17 @@ describe('x-squadra fields', () => {
     ]);
   });
 
+  it('zones cannot change type', () => {
+    const zones = '  zones:\n    - paths: ["docs/**"]\n      settings: { type: editorial }\n';
+    expect(squadraFindings(withLine('  modes:\n', `${zones}  modes:\n`))).toMatchObject([
+      {
+        severity: 'error',
+        path: 'x-squadra.zones[0].settings.type',
+        message: 'zones can only change fill, edges, shadow and motion; type is global, because its rules read x-squadra.fonts.',
+      },
+    ]);
+  });
+
   it('zones need at least one path', () => {
     const zones = '  zones:\n    - paths: []\n      effects: { gradients: true }\n';
     expect(squadraFindings(withLine('  modes:\n', `${zones}  modes:\n`))).toMatchObject([
