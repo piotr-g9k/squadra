@@ -1,0 +1,51 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`squadra validate > fails a bad fixture (exit 1) and prints the located error 1`] = `
+"bad/unknown-setting-step.md
+  x-squadra ✖  1 error
+    ✖ bad/unknown-setting-step.md:12:11  x-squadra.settings.fill: "raise" is not a fill step. Use flat, tonal or raised. Did you mean "raised"?
+  design.md lint 0.4.0: 0 errors, 1 warning, 3 infos
+    ⚠ typography: No typography tokens defined. Agents will use default font choices, reducing your control over the design system's typographic identity.  [missing-typography]
+    ℹ Design system defines 3 colors.  [token-summary]
+    ℹ spacing: No 'spacing' section defined. Layout spacing will fall back to agent defaults.  [missing-sections]
+    ℹ rounded: No 'rounded' section defined. Corner rounding will fall back to agent defaults.  [missing-sections]
+    ℹ x-squadra is ignored by design.md export, as expected.  [token-like-ignored]
+✖ invalid (1 error, 1 warning)
+"
+`;
+
+exports[`squadra validate > passes the PostDAR fixture with warnings (exit 0) 1`] = `
+"good/postdar.md
+  x-squadra ✔  style pebble · 8 settings · 28 dark colors, all in colors
+  design.md lint 0.4.0: 0 errors, 11 warnings, 1 info
+    ⚠ good/postdar.md:189:3  components.poster-orange: textColor (#fff1dc) on backgroundColor (#da550a) has contrast ratio 3.57:1, below WCAG AA minimum of 4.5:1.  [contrast-ratio]
+    ⚠ good/postdar.md:20:11  colors.border: 'border' is defined but never referenced by any component.  [orphaned-tokens]
+    ⚠ good/postdar.md:21:10  colors.input: 'input' is defined but never referenced by any component.  [orphaned-tokens]
+    ⚠ good/postdar.md:22:9  colors.ring: 'ring' is defined but never referenced by any component.  [orphaned-tokens]
+    ⚠ good/postdar.md:23:12  colors.overlay: 'overlay' is defined but never referenced by any component.  [orphaned-tokens]
+    ⚠ good/postdar.md:36:16  colors.brand-heart: 'brand-heart' is defined but never referenced by any component.  [orphaned-tokens]
+    ⚠ good/postdar.md:37:12  colors.chart-1: 'chart-1' is defined but never referenced by any component.  [orphaned-tokens]
+    ⚠ good/postdar.md:38:12  colors.chart-2: 'chart-2' is defined but never referenced by any component.  [orphaned-tokens]
+    ⚠ good/postdar.md:39:12  colors.chart-3: 'chart-3' is defined but never referenced by any component.  [orphaned-tokens]
+    ⚠ good/postdar.md:40:12  colors.chart-4: 'chart-4' is defined but never referenced by any component.  [orphaned-tokens]
+    ⚠ good/postdar.md:41:12  colors.chart-5: 'chart-5' is defined but never referenced by any component.  [orphaned-tokens]
+    ℹ Design system defines 36 colors, 8 typography scales, 5 rounding levels, 6 spacing tokens, 23 components.  [token-summary]
+    ℹ x-squadra is ignored by design.md export, as expected.  [token-like-ignored]
+✔ valid (11 warnings)
+"
+`;
+
+exports[`squadra validate > prints design.md errors as errors (exit 1) 1`] = `
+"bad/designmd-error.md
+  x-squadra ✔  style paper · 8 settings · 3 dark colors, all in colors
+  design.md lint 0.4.0: 1 error, 2 warnings, 3 infos
+    ✖ bad/designmd-error.md:7:12  colors.primary: 'not-a-color' is not a valid color. Expected a CSS color value (e.g., #ffffff, rgb(0 0 0), oklch(0.5 0.2 240)).
+    ⚠ bad/designmd-error.md:4:1  colors: No 'primary' color defined. The agent will auto-generate key colors, reducing your control over the palette.  [missing-primary]
+    ⚠ typography: No typography tokens defined. Agents will use default font choices, reducing your control over the design system's typographic identity.  [missing-typography]
+    ℹ Design system defines 2 colors.  [token-summary]
+    ℹ spacing: No 'spacing' section defined. Layout spacing will fall back to agent defaults.  [missing-sections]
+    ℹ rounded: No 'rounded' section defined. Corner rounding will fall back to agent defaults.  [missing-sections]
+    ℹ x-squadra is ignored by design.md export, as expected.  [token-like-ignored]
+✖ invalid (1 error, 2 warnings)
+"
+`;

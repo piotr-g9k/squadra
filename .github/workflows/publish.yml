@@ -1,0 +1,44 @@
+# Publishes `squadra` to npm when a `v*` tag is pushed.
+# Auth is npm trusted publishing (OIDC): no npm token exists anywhere.
+# One-time setup on npmjs.com → squadra → Settings → Trusted publisher:
+#   GitHub Actions, repo piotr-g9k/squadra, workflow publish.yml.
+name: Publish
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write # OIDC token for npm trusted publishing (+ provenance)
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24 # npm >= 11.5 is required for trusted publishing
+          registry-url: https://registry.npmjs.org
+      - name: Check the tag matches the package version
+        env:
+          TAG: ${{ github.ref_name }}
+        run: |
+          version="$(node -p "require('./packages/squadra/package.json').version")"
+          if [ "v${version}" != "${TAG}" ]; then
+            echo "::error::Tag ${TAG} does not match packages/squadra version ${version}"
+            exit 1
+          fi
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm typecheck
+      - run: pnpm test
+      - run: pnpm build
+      - name: Publish to npm (dist-tag next until v0.1)
+        working-directory: packages/squadra
+        run: npm publish --tag next --access public

@@ -1,0 +1,60 @@
+{
+  "name": "squadra",
+  "version": "0.0.0",
+  "description": "Your app's style as 8 settings in DESIGN.md: read from your code, enforced on your coding agent.",
+  "license": "MIT",
+  "author": "Piotr Grzegorczyk",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/piotr-g9k/squadra.git",
+    "directory": "packages/squadra"
+  },
+  "homepage": "https://github.com/piotr-g9k/squadra#readme",
+  "bugs": "https://github.com/piotr-g9k/squadra/issues",
+  "keywords": [
+    "design.md",
+    "tailwind",
+    "tailwindcss",
+    "design-system",
+    "lint",
+    "claude-code",
+    "agents"
+  ],
+  "type": "module",
+  "engines": {
+    "node": ">=22.12"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.mts",
+      "import": "./dist/index.mjs"
+    },
+    "./eslint": {
+      "types": "./dist/eslint.d.mts",
+      "import": "./dist/eslint.mjs"
+    },
+    "./package.json": "./package.json"
+  },
+  "bin": {
+    "squadra": "./dist/cli.mjs"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsdown",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@google/design.md": "0.4.0",
+    "yaml": "^2.9.1",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.5",
+    "tsdown": "^0.23.5",
+    "typescript": "^7.0.2",
+    "vitest": "^5.1.0"
+  }
+}
