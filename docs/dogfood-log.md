@@ -24,3 +24,12 @@ Mock screens (phase 6a, Nov 5; the AGENTS.md → DESIGN.md pointer was on):
 - 2026-11-05 · no Textarea, Switch, Avatar or Skeleton in the system; it styled a textarea like Input and used Buttons as toggles · create/edit form · none · partly: it stayed on tokens but invented components
 - 2026-11-05 · added `font-sans` inside a serif heading so a price wasn't set in the display serif · auction detail · none · yes: followed "prices are DM Sans"
 - 2026-11-05 · dropped v1's orange "ending soon" dots to keep one highlight per screen · auction list · none (usage count is Tier 3 guidance) · yes
+
+UI review round 1 (Nov 6–7; two reviewers across 320–1920 px in both themes, fixes by agents; the pointer was on):
+
+- 2026-11-07 · used the vendored compact Button sizes (`sm`, `xs`, `icon-sm`, `icon-xs`) for filters, back links, copy and close buttons, so they were 36 px against DESIGN.md's 44 px · several screens · none (candidate `density/touch-size`) · no: DESIGN.md gave the size but no rule for when compact sizes are allowed
+- 2026-11-07 · responsive grids with only `md:`/`lg:` columns; on phones a long title or bid row widened the whole page · lists, auction page · none (candidate `layout/grid-base-column`) · no
+- 2026-11-07 · `w-auto` on an inset Separator and `motion-reduce:animate-none` on overlays did nothing, because the vendored `data-[…]:` utilities win · `/szukaj`, overlays · none (candidate `classes/losing-override`) · no
+- 2026-11-07 · vendored Input and Textarea kept `bg-transparent` although DESIGN.md declares `background` for them · `src/components/ui/` · none (vendored drift, definitions mode) · no
+- 2026-11-07 · forms showed one error at a time at the bottom, with no `aria-invalid` and no focus; DESIGN.md declared no error state · create/edit forms · none · no: the system had no pattern to follow
+- 2026-11-07 · a sky badge on the `muted` photo placeholder measured 1.02:1; a same-hue light theme dropped card-on-page to 1.07:1 · auction cards, every light screen · none (candidates `surface/fill-contrast`, `surface/separation`) · n/a: token choices, not agent edits

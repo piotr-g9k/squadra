@@ -190,6 +190,17 @@ The Markdown body follows design.md's sections. Squadra generates **Do's and Don
 
 **Tier 3: DESIGN.md guidance only.** Which surfaces get fills (FIL-002); color usage under mono (CLR-003, now a `validate` token check); spacing rhythm; density.
 
+**Candidates from the dogfood app** (PostDAR UI review, Nov 7). Not committed. Each one starts as Tier 2 and goes through the precision gate in M2:
+- **`validate` token checks**, next to the mono chroma check, all computed from DESIGN.md colors in both modes:
+  - `surface/separation`: under `fill: tonal` + `edges: none`, tone is the only separator, so warn when `card` on `background` is below ~1.08:1. A same-hue light theme fell to 1.07:1 and the cards disappeared.
+  - `surface/fill-contrast`: measure fills on every surface they can sit on (`muted`/`secondary`/`primary` and badge fills on `background`, `card`, `muted`), not only text pairs. Skeletons on a dark card measured 1.05:1, and a badge on the photo placeholder 1.02:1.
+  - `surface/elevation-order`: brighter means more elevated (`muted` < `background` < `card` < `popover`) in each mode. Pebble states it as an invariant.
+- **Class rules:**
+  - `layout/grid-base-column`: a grid with only `md:`/`lg:` column classes gets one implicit `auto` column on phones, which grows to its widest child and widens the page. Fix: `grid-cols-1` + `min-w-0`.
+  - `classes/losing-override`: a call-site utility that loses to a variant-prefixed utility for the same property in the component's definition, e.g. `w-auto` vs Separator's `data-[orientation=horizontal]:w-full`, or `motion-reduce:animate-none` vs `data-[state=open]:animate-in`. It needs the resolver and vendored definitions mode.
+  - `density/touch-size`: compact control sizes (`size="sm" | "xs" | "icon-sm" | "icon-xs"`) under `density: spacious`, outside the contexts DESIGN.md allows.
+- **Vendored drift:** a vendored component that contradicts its declared component tokens (Input `bg-transparent` vs declared `background`). Report it in definitions mode; `squadra fix --ui` rewrites it later.
+
 **Precision gate before a rule can block:** ≥98% precision over ≥30 hand-labelled findings, 0 false positives on the agent-generated corpus, ≥80% recall on injected violations. A rule that misses the gate ships as warn. `--strict` promotes Tier 2 for people who want it.
 
 **Vendored components.** Files under `vendored` globs, and files that match the shadcn registry (`npx shadcn add` runs through Bash, so the Edit hook never sees them), run in a *definitions* mode. Only setting rules apply there (shadow, Card fill, edges, blur, motion durations); shadcn idioms (`ring-[3px]`, `text-white`, `dark:bg-input/30`, inline `--sidebar-width`) are skipped. Leftover findings sit in a separate `vendored` baseline section. Later, `squadra fix --ui` rewrites vendored components for the chosen settings as one reviewable diff.
@@ -298,7 +309,7 @@ Two weeks with the hook on in the dogfood app. Publish the numbers (blocks, fals
 ### M2 — Existing apps + breadth (target mid-January 2027, ~15 h)
 
 - `init` on existing apps (evidence, closest style, tokens read from CSS).
-- Tier-2 rules; zones-lite; `validate` mono chroma check.
+- Tier-2 rules; zones-lite; `validate` mono chroma check, plus the dogfood surface checks if time allows (see Rules › Candidates from the dogfood app).
 - Codex/generic: AGENTS.md + pre-commit + GitHub Action.
 - Precision run on **6 public Tailwind v4 repos** spanning design languages (dashboard, marketing site, dense app…) + 30 agent-generated pages. Every misfire becomes a regression fixture.
 - **Done when:**
@@ -357,7 +368,8 @@ Settings → tokens generator, `build`, DTCG; overrides, three-layer resolution 
   - React Native/Expo, gated on repeat web users (Uniwind vs NativeWind v5 decided then);
   - shadow/material scope split for surfaces vs controls, a `bars` surface class, a `floating` setting;
   - typography tracking/base size, focus-ring style, more presets;
-  - remote presets (`npm:`/`github:`); declared button variants; `diff`.
+  - remote presets (`npm:`/`github:`); declared button variants; `diff`;
+  - from the dogfood app: per-color placement constraints (e.g. "warm brand color only at full width, never next to blue at small scale"); highlight *actions* (one per screen) vs highlight *states* (may repeat in lists); which type style numeric values take; declared stacking for every bottom-anchored surface when the system has bottom navigation.
 - **v0.3:** a component layer that reads the settings (one Card that renders flat, tonal or raised).
 - **v0.4:** Figma/Paper variable sync through DTCG 2025.10 + the Resolver module.
 

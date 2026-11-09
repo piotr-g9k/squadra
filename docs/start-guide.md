@@ -59,6 +59,13 @@ Run one T3 thread per session. Start each one with: read the plan and decisions,
 - **S3:** the app's CSS resets Tailwind's default palette, shadow and blur scales, so `bg-blue-500` or `shadow-md` silently generate nothing. Rules must flag classes that resolve to nothing, not skip them.
 - **S5:** the Pebble preset should ship that closed-scale reset. `shadcn init` no longer offers `new-york`, so `components.json` had to be written by hand.
 
+**Update from PostDAR's UI review round 1** (Nov 7):
+- **S1:** PostDAR added `x-squadra.feedback: SQUADRA_FEEDBACK.md`, and `validate` rejects it as an unknown key. That's intended: `x-squadra` stays strict, and pointers go in the Markdown body (see decisions.md, Nov 9).
+- **S5:** lift Pebble from PostDAR's *current* `DESIGN.md` and `src/styles.css`, not the Nov 5 snapshot in the S1 fixture. Leave the brand palette out (the blue light mode and sand-only-at-full-width are owner choices). The generic parts Pebble should keep:
+  - **Components:** Avatar, Textarea, Switch, Skeleton, a media frame with empty/loading/processing states, a bottom tab bar, a skip link, and a field-error pattern (error line under the field, `aria-describedby`, focus on the first invalid field).
+  - **Do's and Don'ts:** touch controls are 44 px (compact Button sizes only for non-touch, inline or secondary use); menu items `min-h-11` on phones; every animated component has a reduced-motion variant whose selector wins (`motion-reduce:data-[state=open]:animate-none`); responsive grids start with `grid-cols-1` + `min-w-0`; brighter = more elevated in both modes.
+  - **CSS:** a `pb-safe` utility (`env(safe-area-inset-bottom)`, with `viewport-fit=cover`), and a toast offset that clears the tab bar on phones.
+
 **S1 prompt** (paste as-is):
 
 > Read docs/plan.md and docs/decisions.md. Scaffold the repo for M0 exactly as in the plan's Architecture section: pnpm workspace, one package `packages/squadra` (TypeScript, Node 20+, tsdown, vitest), a `squadra` bin that prints its version, CI running typecheck + tests on PRs, and a tag-triggered publish workflow using npm trusted publishing. No rules yet. Use plan mode first.
